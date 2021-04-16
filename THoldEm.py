@@ -8,9 +8,9 @@ class Card:
         self.suit = suit
         self.image = image
 
-        # random magic string function for testing purposes
-        def __str__(self):
-            return "{} of {}".format(self.number, self.suit)
+    # random magic string function for testing purposes
+    def __str__(self):
+        return "{} of {}".format(self.number, self.suit)
 
 class Player:
 
