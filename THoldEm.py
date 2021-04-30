@@ -1,5 +1,6 @@
 # we will have the overarching classes here
 from random import randint
+from time import *
 
 class Card:
     def __init__(self, number, suit = " ", image = " "):
