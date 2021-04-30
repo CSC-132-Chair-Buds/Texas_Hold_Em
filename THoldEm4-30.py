@@ -708,7 +708,6 @@ class Game:
 
 
 
-
 INCREMENT = 10
 
 small_Blind = 10
@@ -720,6 +719,7 @@ Game1.startup()
 while (P1.purse != 0) and (P2.purse != 0) (P3.purse != 0):
     Game1.play_Game()
     round_Counter = 0
+    
 
 
 
