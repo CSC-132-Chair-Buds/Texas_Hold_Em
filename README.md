@@ -4,7 +4,8 @@ Card Game for Final Project in CSC 132-004 at Louisiana Tech
 Number of Group Members: 3
 
 Description of Project:
-    Essentially we are making the Texas Hold 'Em variation of Poker to the best of our abilities by coding it all by ourselves.
+    
+  Essentially we are making the Texas Hold 'Em variation of Poker to the best of our abilities by coding it all by ourselves.
   The three of us each have a Raspberry Pi with an LCD touchscreen, and we used this to run our poker game code. Since there are only three of us,
   we hardcoded the program to only play with 3 players ever in an entire game of poker. So, when one player quits the entire game of poker by quiting
   or running out of money, then the game will break and will have to be restarted manually. Our game runs its "main code" on one raspberry pi where it
@@ -18,6 +19,7 @@ Description of Project:
   negative lead into ground. With this simple circuit we created, our breadboard GPIO pins tell us whether or not you pressed one of the buttons.
 
 Overview of Code:
+
     1.) The Class Heirarchy of Object-Oriented Programming of Objects used in poker (i.e. table to play upon, cards to use, players,  etc.)
     2.) The GUI (graphical user interface)
     3.) The Logic of the game (i.e. how betting rounds work or comparing hands to declare a winner)
