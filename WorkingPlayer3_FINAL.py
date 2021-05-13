@@ -1,58 +1,45 @@
+# import needed modules
 import socket
 import pygame
 from time import sleep
+# do not forget to initialize pygame
 pygame.init()
 
+# create display screen here and we use (800,450)
+# so that it fits nicely along the raspberry pi
+# LCD touchscreen
 surface1 = pygame.display.set_mode((800,450))
-
-# function to recieve messages from client
-# takes the five parameters needed to update
-# the gui
-def UDP_server(round_Counter, main_Player, T1, other_Player1, other_Player2):
-    host = "127.0.0.1"
-    port = 65432
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    data = [round_Counter, main_Player, T1, other_Player1, other_Player2]
-    newData = []
-    for msg in data:
-        if(msg == int):
-            msg = 'i' + str(msg)
-            newData.append(msg)
-        else:
-            msg = 's' + str(msg)
-            newData.append(msg)
-        sock.sendto(bytes(msg, "utf-8"), (host, port))
-    
-    
-# function to send a message of str or int to the server
+ 
+# function to recieve data streams from MainPlayer_FINALFINAL.py
+# the Main Player sends over a list as a string (i.e. "[0,1,2,...,n]")
+# we decipher this string and turn it back into a list of data
 def UDP_client():
+    # host IP address that needs to change depending on current IPv4 IP address
     host = "127.0.0.1"
+    # port that matches Second Player's Port in Main Player Code
     port = 65433
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
+    
     sock.bind((host, port))    
+    
+    # receive data from Main Player code
     data, addr = sock.recvfrom(1024)
+    
+    # We know the main player sent the data as a string of a list
+    # so here we take off the brackets of the list from the string
     data = data[1:-1]
     data = data.decode("utf-8")
+    
+    # Use the split function to make this string of a list back into a list
     data = data.split(", ")
     print(data)
     
+    # returns the list of data
     return data
 
-def UDP_client2():
-    host = "127.0.0.1"
-    port = 65432
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    sock.bind((host, port))    
-    data, addr = sock.recvfrom(1024)
-    data = data.decode("utf-8")
-    
-    return data
-
+# Function to update GUI for second player based off of the many data sent from the main player
 # P1 is just the player that we want to have being the 'main character'
 def updateScreen(round_Counter, main_Char_hand0_image, main_Char_hand1_image, main_Char_current_Bet, main_Char_purse, T1_hand0_image, T1_hand1_image, T1_hand2_image, T1_hand3_image, T1_hand4_image, T1_pot, other_Char1_hand0_image, other_Char1_hand1_image, other_Char1_current_Bet, other_Char1_purse, other_Char2_hand0_image, other_Char2_hand1_image, other_Char2_current_Bet, other_Char2_purse, main_Char_Turn, main_Char_Win, other_Char1_Turn, other_Char1_Win, other_Char2_Turn, other_Char2_Win):
     # make background green (using HEX for RGB values)
@@ -91,7 +78,7 @@ def updateScreen(round_Counter, main_Char_hand0_image, main_Char_hand1_image, ma
         # player 3
         surface1.blit(Card_back, (610, 0))
         surface1.blit(Card_back, (710, 0))
-        #determine player turn
+        # determine player turn and display it
         if(main_Char_Turn == True):
             textPlayer_Turn = style2.render("its Your Turn.", True, (0,0,0))
             surface1.blit(textPlayer_Turn, (320,0))
@@ -118,7 +105,7 @@ def updateScreen(round_Counter, main_Char_hand0_image, main_Char_hand1_image, ma
         # player 3
         surface1.blit(Card_back, (610, 0))
         surface1.blit(Card_back, (710, 0))
-        #determine player turn
+        # determine player turn and display it
         if(main_Char_Turn == True):
             textPlayer_Turn = style2.render("its Your Turn.", True, (0,0,0))
             surface1.blit(textPlayer_Turn, (320,0))
@@ -145,7 +132,7 @@ def updateScreen(round_Counter, main_Char_hand0_image, main_Char_hand1_image, ma
         # player 3
         surface1.blit(Card_back, (610, 0))
         surface1.blit(Card_back, (710, 0))
-        #determine player turn
+        # determine player turn and display it
         if(main_Char_Turn == True):
             textPlayer_Turn = style2.render("its Your Turn.", True, (0,0,0))
             surface1.blit(textPlayer_Turn, (320,0))
@@ -172,7 +159,7 @@ def updateScreen(round_Counter, main_Char_hand0_image, main_Char_hand1_image, ma
         # player 3
         surface1.blit(Card_back, (610, 0))
         surface1.blit(Card_back, (710, 0))
-        #determine player turn
+        # determine player turn and display it
         if(main_Char_Turn == True):
             textPlayer_Turn = style2.render("its Your Turn.", True, (0,0,0))
             surface1.blit(textPlayer_Turn, (320,0))
@@ -199,7 +186,7 @@ def updateScreen(round_Counter, main_Char_hand0_image, main_Char_hand1_image, ma
         # player 3
         surface1.blit(other_Char2_hand0_image, (610, 0))
         surface1.blit(other_Char2_hand1_image, (710, 0))
-        # determine winner
+        # determine winner and display it
         if(main_Char_Win == True):
             textWin = style2.render("YOU WON!", True, (0,0,0))
             surface1.blit(textWin, (340,0))
@@ -216,7 +203,7 @@ def updateScreen(round_Counter, main_Char_hand0_image, main_Char_hand1_image, ma
     pygame.display.flip()
     sleep(0.5)
 
-# funtion to determine card image
+# funtion to determine card image from the data received from main player
 def determineImage(num, suit):
     if(suit == "'clubs'"):
         suit = "C"
@@ -244,7 +231,9 @@ def determineImage(num, suit):
     return (pygame.transform.scale(
                 pygame.image.load("Deck of Cards (PNG)/PNG/{}".format(fileLocation)),
                 (90, 90)))  # may need to edit file location depending on which folder it is in
-    
+
+# function used to convert stringed Boolean values sent
+# from the main player back to Boolean values
 def determineBool(Bool):
     if(Bool == "False"):
         Bool = False
@@ -252,15 +241,18 @@ def determineBool(Bool):
         Bool = True
     return Bool
 
-# assign card back
+# assign card back from card image files
 Card_back = pygame.transform.scale(pygame.image.load("Deck of Cards (PNG)/PNG/gray_back.png"), (90,90))
 
 
 Entire_Game = True
 
 while(Entire_Game):
-    # get table hand from server pi
+    # NOTE data from main player is sent in a very specific order
+    # that is why we append specific indecies to certain variables
     data = UDP_client()
+    
+    # get table hand from server pi
     num = int(data[0])
     suit = data[1]
     T1_hand0_image = determineImage(num, suit)
@@ -278,7 +270,6 @@ while(Entire_Game):
     T1_hand4_image = determineImage(num, suit)
 
     # get other Player 1 hands from server pi
-
     num = int(data[10])
     suit = data[11]
     other_Char2_hand0_image = determineImage(num, suit)
@@ -306,6 +297,8 @@ while(Entire_Game):
     game = True
 
     while(game):
+        # NOTE data from main player is sent in a very specific order
+        # that is why we append specific indecies to certain variables
         data = UDP_client()
         round_Counter = int(data[0])
         other_Char2_current_Bet = int(data[1])
@@ -324,8 +317,10 @@ while(Entire_Game):
         other_Char1_Win = determineBool(data[12])
         main_Char_Win = determineBool(data[14])
         
+        # send all of this data to the GUI in order to update it accordingly for the second player's screen
         updateScreen(round_Counter, main_Char_hand0_image, main_Char_hand1_image, main_Char_current_Bet, main_Char_purse, T1_hand0_image, T1_hand1_image, T1_hand2_image, T1_hand3_image, T1_hand4_image, T1_pot, other_Char1_hand0_image, other_Char1_hand1_image, other_Char1_current_Bet, other_Char1_purse, other_Char2_hand0_image, other_Char2_hand1_image, other_Char2_current_Bet, other_Char2_purse, main_Char_Turn, main_Char_Win, other_Char1_Turn, other_Char1_Win, other_Char2_Turn, other_Char2_Win)
-
+        
+        # here we check if the round of everyone's current hands is still going on
         game = bool(int(data[8]))
         print(game)
         
